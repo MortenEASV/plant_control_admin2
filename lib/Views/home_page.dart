@@ -21,29 +21,27 @@ class _HomePageState extends State<HomePage> {
     var raspsize = 200.0;
     var confsize = 200.0;
     var screenHeight = MediaQuery.of(context).size.height;
-    var screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Row(
         children: [
           Container(
             width: 600,
             child: Column(
-              children: [
-                RaspberryStatusWidget(connected: false, size: raspsize),
-                ConfigurationWidget(
-                    width: confsize,
-                    configHubUrl: "",
-                    configRestUrl: "",
-                    configEnabled: false,
-                    configId: ""),
-              ],
-            ),
+                children: [
+                  RaspberryStatusWidget(connected: false, size: raspsize),
+                  ConfigurationWidget(
+                      width: 485,
+                      configHubUrl: "",
+                      configRestUrl: "",
+                      configEnabled: false,
+                      configId: ""),
+                ],
+              ),
           ),
           //Vertical line
           Container(height: screenHeight, width: 0.5, color: Colors.black),
 
-          Container(
-              width: 300, child: BarcodeWidget(img: vm.img, qrSize: 200.0))
+          SizedBox(width: 300, child: BarcodeWidget(img: vm.img, qrSize: 200.0))
         ],
       ),
     );

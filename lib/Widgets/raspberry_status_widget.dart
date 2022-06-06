@@ -17,10 +17,12 @@ class _RaspberryStatusWidgetState extends State<RaspberryStatusWidget> {
     return Container(
       child: widget.connected?  //Conditional widget
       Column(children:[ //True
+        const Padding(padding: EdgeInsets.all(5)),
         Image.file(File("assets/raspberry-connected.png"), width: widget.size),
         const Text("Connection established")
       ]):
       Column(children:[ //False
+        const Padding(padding: EdgeInsets.all(5)),
           Image.file(File("assets/raspberry-disconnected.png"), width: 200),
           const Text("Please connect the data logger via ethernet cable")
         ])

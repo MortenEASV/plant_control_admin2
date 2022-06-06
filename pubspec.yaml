@@ -37,7 +37,7 @@ dependencies:
   dartssh2: ^2.7.1
   image: ^3.2.0
   pretty_qr_code: ^2.0.2
-
+  window_manager: ^0.2.5
 dev_dependencies:
   flutter_test:
     sdk: flutter

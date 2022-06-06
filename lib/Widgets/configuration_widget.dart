@@ -11,7 +11,9 @@ class ConfigurationWidget extends StatefulWidget {
       required this.configHubUrl,
       required this.configRestUrl})
       : super(key: key);
+
   final double width;
+  final double padding = 5.0;
 
   //Config parameters
   final String configId;
@@ -26,31 +28,63 @@ class ConfigurationWidget extends StatefulWidget {
 class _ConfigurationWidgetState extends State<ConfigurationWidget> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-            width: widget.width /2,
-            height: 200,
-            child: Column(
+    return SizedBox(
+      width: widget.width + widget.padding * 2,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: widget.width / 2,
+                height: 150,
+                child: Column(
+                  children: [
+                    const CustomTextFormFieldWidget(
+                        hintText: "Id", enabled: false),
+                    CustomSwitchWidget(configEnabled: widget.configEnabled)
+                  ],
+                ),
+              ),
+              Padding(padding: EdgeInsets.all(widget.padding)),
+              SizedBox(
+                width: widget.width / 2,
+                height: 150,
+                child: Column(
+                  children: const [
+                    CustomTextFormFieldWidget(hintText: "HubUrl"),
+                    CustomTextFormFieldWidget(hintText: "RestUrl"),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Row(
               children: [
-                const CustomTextFormFieldWidget(hintText: "Id", enabled: false),
-                CustomSwitchWidget(configEnabled: widget.configEnabled)
+                SizedBox(
+                  width: widget.width / 2,
+                  child: Column(
+                    children: const [
+                      CustomTextFormFieldWidget(hintText: "Min Humidity"),
+                      CustomTextFormFieldWidget(hintText: "Min Temperature"),
+                      CustomTextFormFieldWidget(hintText: "Moist"),
+                    ],
+                  ),
+                ),
+                Padding(padding: EdgeInsets.all(widget.padding)),
+                SizedBox(
+                  width: widget.width / 2,
+                  child: Column(
+                    children: const [
+                      CustomTextFormFieldWidget(hintText: "Max Humidity"),
+                      CustomTextFormFieldWidget(hintText: "Max Temperature"),
+                      CustomTextFormFieldWidget(hintText: "Dry"),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-        const Padding(padding: EdgeInsets.all(5)),
-        SizedBox(
-            width: widget.width /2,
-            height: 200,
-            child: Column(
-              children: const [
-                CustomTextFormFieldWidget(hintText: "HubUrl"),
-                CustomTextFormFieldWidget(hintText: "RestUrl"),
-              ],
-            ),
-          ),
-
-      ],
+        ],
+      ),
     );
   }
 }
