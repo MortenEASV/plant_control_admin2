@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 
-import 'custom_button_widget.dart';
-
 class CustomSwitchWidget extends StatefulWidget {
-  CustomSwitchWidget({Key? key, required this.configEnabled}) : super(key: key);
+  CustomSwitchWidget(
+      {Key? key,
+      required this.configEnabled,
+      required this.width,
+      required this.text1,
+      required this.text2})
+      : super(key: key);
   bool configEnabled;
 
   Color color = Colors.lightBlue;
   Color textColor = Colors.black;
   final isSelected = <bool>[false, false];
+  final double width;
+  final String text1;
+  final String text2;
 
   @override
   State<CustomSwitchWidget> createState() => CustomSwitchWidgetState();
@@ -21,13 +28,17 @@ class CustomSwitchWidgetState extends State<CustomSwitchWidget> {
       children: [
         const Padding(padding: EdgeInsets.all(5)),
         SizedBox(
+          height: 53,
           child: ToggleButtons(
             fillColor: widget.color,
             selectedColor: widget.textColor,
             isSelected: widget.isSelected,
-            children: [CustomButtonWidget(text: 'Active', width: 100.0), CustomButtonWidget(text: 'Inactive', width: 100.0)],
+            children: [
+              SizedBox(width: widget.width / 2, child: Center(child: Text(widget.text1))),
+              SizedBox(width: widget.width / 2, child: Center(child: Text(widget.text2))),
+            ],
             onPressed: (index) {
-              switch(index){
+              switch (index) {
                 case 0:
                   widget.color = Colors.lightBlue;
                   widget.isSelected[0] = true;

@@ -39,9 +39,10 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                 height: 150,
                 child: Column(
                   children: [
-                    const CustomTextFormFieldWidget(
-                        hintText: "Id", enabled: false),
-                    CustomSwitchWidget(configEnabled: widget.configEnabled)
+                    CustomSwitchWidget(configEnabled: widget.configEnabled, width: 200, text1: 'Active', text2: 'Inactive'),
+                    CustomTextFormFieldWidget(hintText: "Id", enabled: false),
+
+
                   ],
                 ),
               ),
@@ -59,30 +60,30 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
             ],
           ),
           Row(
-              children: [
-                SizedBox(
-                  width: widget.width / 2,
-                  child: Column(
-                    children: const [
-                      CustomTextFormFieldWidget(hintText: "Min Humidity"),
-                      CustomTextFormFieldWidget(hintText: "Min Temperature"),
-                      CustomTextFormFieldWidget(hintText: "Moist"),
-                    ],
-                  ),
+            children: [
+              SizedBox(
+                width: widget.width / 2,
+                child: Column(
+                  children: const [
+                    CustomTextFormFieldWidget(hintText: "Min Humidity"),
+                    CustomTextFormFieldWidget(hintText: "Min Temperature"),
+                    CustomTextFormFieldWidget(hintText: "Moist"),
+                  ],
                 ),
-                Padding(padding: EdgeInsets.all(widget.padding)),
-                SizedBox(
-                  width: widget.width / 2,
-                  child: Column(
-                    children: const [
-                      CustomTextFormFieldWidget(hintText: "Max Humidity"),
-                      CustomTextFormFieldWidget(hintText: "Max Temperature"),
-                      CustomTextFormFieldWidget(hintText: "Dry"),
-                    ],
-                  ),
+              ),
+              Padding(padding: EdgeInsets.all(widget.padding)),
+              SizedBox(
+                width: widget.width / 2,
+                child: Column(
+                  children: const [
+                    CustomTextFormFieldWidget(hintText: "Max Humidity"),
+                    CustomTextFormFieldWidget(hintText: "Max Temperature"),
+                    CustomTextFormFieldWidget(hintText: "Dry"),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
+          ),
         ],
       ),
     );

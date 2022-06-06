@@ -13,7 +13,7 @@ class BarcodeWidget extends StatelessWidget {
             typeNumber: 6,
             size: qrSize,
             data: '629b4aa3b0c62559fbc7226a',
-            errorCorrectLevel: QrErrorCorrectLevel.M,
+            errorCorrectLevel: QrErrorCorrectLevel.H,
             roundEdges: false,
           ),
     );

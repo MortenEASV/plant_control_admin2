@@ -29,8 +29,8 @@ class _HomePageState extends State<HomePage> {
             child: Column(
                 children: [
                   RaspberryStatusWidget(connected: false, size: raspsize),
-                  ConfigurationWidget(
-                      width: 485,
+                  const ConfigurationWidget(
+                      width: 450,
                       configHubUrl: "",
                       configRestUrl: "",
                       configEnabled: false,
