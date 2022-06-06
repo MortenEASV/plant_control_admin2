@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:plant_control_admin/Widgets/barcode_widget.dart';
 import 'package:plant_control_admin/Widgets/configuration_widget.dart';
+import 'package:plant_control_admin/Widgets/raspberry_status_widget.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import '../ViewModels/home_page_viewmodel.dart';
 
@@ -12,36 +14,37 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var vm = HomePageViewModel.instance;
   @override
   Widget build(BuildContext context) {
+    var vm = HomePageViewModel.instance;
+    var qrsize = 200.0;
+    var raspsize = 200.0;
+    var confsize = 200.0;
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("This is major tom to plant control"),
-            OutlinedButton(onPressed: () {
-              vm.pressed();
-              setState(() {
-                vm.img = vm.img;
-              });
-            }, child: Text("Press me homie")),
-            ConfigurationWidget(
+      body: Row(
+        children: [
+          Container(
+            width: 600,
+            child: Column(
+              children: [
+                RaspberryStatusWidget(connected: false, size: raspsize),
+                ConfigurationWidget(
+                    width: confsize,
+                    configHubUrl: "",
+                    configRestUrl: "",
+                    configEnabled: false,
+                    configId: ""),
+              ],
+            ),
+          ),
+          //Vertical line
+          Container(height: screenHeight, width: 0.5, color: Colors.black),
 
-            ),
-            PrettyQr(
-              image: vm.img,
-              typeNumber: 6,
-              size: 200,
-              data: '629b4aa3b0c62559fbc7226a',
-              errorCorrectLevel: QrErrorCorrectLevel.M,
-              roundEdges: false,
-            ),
-          ],
-        ),
+          Container(
+              width: 300, child: BarcodeWidget(img: vm.img, qrSize: 200.0))
+        ],
       ),
     );
   }
