@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 
+import '../Models/config.dart';
+
 class CustomSwitchWidget extends StatefulWidget {
   CustomSwitchWidget(
       {Key? key,
-      required this.configEnabled,
+      required this.config,
       required this.width,
       required this.text1,
-      required this.text2})
+      required this.text2, required this.piConnected})
       : super(key: key);
-  bool configEnabled;
+  Config config;
 
   Color color = Colors.lightBlue;
   Color textColor = Colors.black;
-  final isSelected = <bool>[false, false];
+  List<bool> isSelected = List.generate(2, (index) => false);
   final double width;
   final String text1;
   final String text2;
+  final bool piConnected;
 
   @override
   State<CustomSwitchWidget> createState() => CustomSwitchWidgetState();
@@ -38,6 +41,7 @@ class CustomSwitchWidgetState extends State<CustomSwitchWidget> {
               SizedBox(width: widget.width / 2, child: Center(child: Text(widget.text2))),
             ],
             onPressed: (index) {
+              if (!widget.piConnected) return;
               switch (index) {
                 case 0:
                   widget.color = Colors.lightBlue;

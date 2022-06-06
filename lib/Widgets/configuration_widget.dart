@@ -2,24 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:plant_control_admin/Widgets/custom_switch_widget.dart';
 import 'package:plant_control_admin/Widgets/custom_textformfield_widget.dart';
 
+import '../Models/config.dart';
+
 class ConfigurationWidget extends StatefulWidget {
   const ConfigurationWidget(
       {Key? key,
       required this.width,
-      required this.configId,
-      required this.configEnabled,
-      required this.configHubUrl,
-      required this.configRestUrl})
+      required this.config,
+      required this.piConnected})
       : super(key: key);
 
   final double width;
   final double padding = 5.0;
+  final bool piConnected;
 
   //Config parameters
-  final String configId;
-  final String configHubUrl;
-  final String configRestUrl;
-  final bool configEnabled;
+  final Config config;
 
   @override
   _ConfigurationWidgetState createState() => _ConfigurationWidgetState();
@@ -39,10 +37,12 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                 height: 150,
                 child: Column(
                   children: [
-                    CustomSwitchWidget(configEnabled: widget.configEnabled, width: 200, text1: 'Active', text2: 'Inactive'),
-                    CustomTextFormFieldWidget(hintText: "Id", enabled: false),
-
-
+                    CustomSwitchWidget(
+                        config: widget.config,
+                        width: 200,
+                        text1: 'Active',
+                        text2: 'Inactive', piConnected: widget.piConnected),
+                    const CustomTextFormFieldWidget(hintText: "Id", enabled: false),
                   ],
                 ),
               ),
@@ -51,9 +51,9 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                 width: widget.width / 2,
                 height: 150,
                 child: Column(
-                  children: const [
-                    CustomTextFormFieldWidget(hintText: "HubUrl"),
-                    CustomTextFormFieldWidget(hintText: "RestUrl"),
+                  children: [
+                    CustomTextFormFieldWidget(hintText: "Hub Url", enabled: widget.piConnected),
+                    CustomTextFormFieldWidget(hintText: "Rest Url", enabled: widget.piConnected),
                   ],
                 ),
               ),
@@ -64,10 +64,10 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
               SizedBox(
                 width: widget.width / 2,
                 child: Column(
-                  children: const [
-                    CustomTextFormFieldWidget(hintText: "Min Humidity"),
-                    CustomTextFormFieldWidget(hintText: "Min Temperature"),
-                    CustomTextFormFieldWidget(hintText: "Moist"),
+                  children: [
+                    CustomTextFormFieldWidget(hintText: "Min Humidity", enabled: widget.piConnected),
+                    CustomTextFormFieldWidget(hintText: "Min Temperature", enabled: widget.piConnected),
+                    CustomTextFormFieldWidget(hintText: "Moist", enabled: widget.piConnected),
                   ],
                 ),
               ),
@@ -75,10 +75,10 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
               SizedBox(
                 width: widget.width / 2,
                 child: Column(
-                  children: const [
-                    CustomTextFormFieldWidget(hintText: "Max Humidity"),
-                    CustomTextFormFieldWidget(hintText: "Max Temperature"),
-                    CustomTextFormFieldWidget(hintText: "Dry"),
+                  children: [
+                    CustomTextFormFieldWidget(hintText: "Max Humidity", enabled: widget.piConnected),
+                    CustomTextFormFieldWidget(hintText: "Max Temperature", enabled: widget.piConnected),
+                    CustomTextFormFieldWidget(hintText: "Dry", enabled: widget.piConnected),
                   ],
                 ),
               ),

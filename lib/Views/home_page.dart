@@ -17,9 +17,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var vm = HomePageViewModel.instance;
-    var qrsize = 200.0;
     var raspsize = 200.0;
-    var confsize = 200.0;
     var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Row(
@@ -27,16 +25,12 @@ class _HomePageState extends State<HomePage> {
           Container(
             width: 600,
             child: Column(
-                children: [
-                  RaspberryStatusWidget(connected: false, size: raspsize),
-                  const ConfigurationWidget(
-                      width: 450,
-                      configHubUrl: "",
-                      configRestUrl: "",
-                      configEnabled: false,
-                      configId: ""),
-                ],
-              ),
+              children: [
+                RaspberryStatusWidget(connected: vm.connected, size: raspsize),
+                ConfigurationWidget(
+                    width: 450, config: vm.config, piConnected: vm.connected),
+              ],
+            ),
           ),
           //Vertical line
           Container(height: screenHeight, width: 0.5, color: Colors.black),
