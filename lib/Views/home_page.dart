@@ -17,6 +17,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var vm = HomePageViewModel.instance;
+    vm.addListener(() {
+      setState((){});
+    });
     var raspsize = 200.0;
     var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(

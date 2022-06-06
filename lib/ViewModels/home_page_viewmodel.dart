@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:dart_ping/dart_ping.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:dartssh2/dartssh2.dart';
@@ -11,7 +10,7 @@ import 'package:image/image.dart';
 
 import '../Models/config.dart';
 
-class HomePageViewModel {
+class HomePageViewModel with ChangeNotifier{
   //Singleton
   static final HomePageViewModel instance = HomePageViewModel._();
 
@@ -40,16 +39,21 @@ class HomePageViewModel {
     });
   }
 
+  bool running = false;
   networkChange() async {
+    if (running) return;  //Avoid spam calls
+    running = true;
     try {
       //Connect to raspberry via SSH
-      client = SSHClient(await SSHSocket.connect('raspberrypi.local', 22),
+      client = SSHClient(await SSHSocket.connect('raspberrypi.local', 22, timeout: const Duration(seconds: 2)),
           username: 'pi', onPasswordRequest: () => 'easv2021');
 
       connected = true;
     } catch (_) {
       connected = false;
     }
+    notifyListeners();
+    running = false;
   }
 
   pressed() {

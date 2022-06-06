@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant_control_admin/Widgets/custom_switch_widget.dart';
+import 'package:plant_control_admin/Widgets/custom_text_button.dart';
 import 'package:plant_control_admin/Widgets/custom_textformfield_widget.dart';
 
 import '../Models/config.dart';
@@ -84,6 +85,7 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
               ),
             ],
           ),
+          CustomTextButton(text: "Register", onPressed: () => {}),
         ],
       ),
     );

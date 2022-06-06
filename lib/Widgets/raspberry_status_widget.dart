@@ -24,7 +24,8 @@ class _RaspberryStatusWidgetState extends State<RaspberryStatusWidget> {
       Column(children:[ //False
         const Padding(padding: EdgeInsets.all(5)),
           Image.file(File("assets/raspberry-disconnected.png"), width: 200),
-          const Text("Please connect the data logger via ethernet cable")
+          const Text("Please connect the data logger via ethernet cable"),
+          const Text("This may take up to 30 seconds to register")
         ])
 
 
