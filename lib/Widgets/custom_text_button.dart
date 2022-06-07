@@ -9,17 +9,22 @@ class CustomTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      width: 100,
-      child: RawMaterialButton(
-        shape: const ContinuousRectangleBorder(
-            side: BorderSide(color: Colors.grey, width: 0.5)),
-        onPressed: () {},
-        child: Text(text,
-            style: const TextStyle(
-                color: Colors.black, fontWeight: FontWeight.normal)),
-      ),
+    return Column(
+      children: [
+        const Padding(padding: EdgeInsets.all(5)),
+        SizedBox(
+          height: 50,
+          width: 100,
+          child: RawMaterialButton(
+            shape: const ContinuousRectangleBorder(
+                side: BorderSide(color: Colors.grey, width: 0.5)),
+            onPressed: () => onPressed(),
+            child: Text(text,
+                style: const TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.normal)),
+          ),
+        ),
+      ],
     );
   }
 }

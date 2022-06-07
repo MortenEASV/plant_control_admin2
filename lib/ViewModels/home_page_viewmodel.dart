@@ -7,10 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:dartssh2/dartssh2.dart';
 import 'package:image/image.dart';
+import 'package:ini/ini.dart';
 
-import '../Models/config.dart';
 
-class HomePageViewModel with ChangeNotifier{
+
+class HomePageViewModel with ChangeNotifier {
   //Singleton
   static final HomePageViewModel instance = HomePageViewModel._();
 
@@ -19,44 +20,80 @@ class HomePageViewModel with ChangeNotifier{
   }
 
   var sshHost = "raspberrypi.local";
-  var client;
-  var img = const NetworkImage("https://www.kindpng.com/picc/m/63-636289_computer-chip-computer-chip-icon-png-transparent-png.png");
+  late SSHClient client;
+  var img = const NetworkImage(
+      "https://www.kindpng.com/picc/m/63-636289_computer-chip-computer-chip-icon-png-transparent-png.png");
 
   //var img = NetworkImage("https://cdn-icons-png.flaticon.com/512/964/964748.png");
   bool connected = false;
+  bool configRead = false;
+  Config config = Config();
+  init(){
+    config.addSection("Logging");
+    config.addSection("Air");
+    config.addSection("Soil");
 
-  Config config = Config(
-      logging: Logging(id: "", active: false, hubUrl: "", restUrl: ""),
-      air: Air(minHumid: 0.0, maxHumid: 0.0, minTemp: 0.0, maxTemp: 0.0),
-      soil: Soil(moist: 0.0, dry: 0.0));
+    config.set("Logging", "LoggerId", "");
+    config.set("Logging", "PairingId", "");
+    config.set("Logging", "Active", "False");
+    config.set("Logging", "HubUrl", "http://40.87.132.220:8093/hubs/logger");
+    config.set("Logging", "RestUrl", "http://40.87.132.220:8092");
 
-  init() async {
+    config.set("Air", "MinHumid", "0.0");
+    config.set("Air", "MaxHumid", "0.0");
+    config.set("Air", "MinTemp", "0.0");
+    config.set("Air", "MaxTemp", "0.0");
+
+    config.set("Soil", "Moist", "0.0");
+    config.set("Soil", "Dry", "0.0");
+
+
+
+
+    connectSSH();
     //Initialize network state listener
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      if (result.name == "ethernet") {
-        networkChange();
-      }
+      print('ayo');
+      connectSSH();
     });
   }
 
-  bool running = false;
-  networkChange() async {
-    if (running) return;  //Avoid spam calls
-    running = true;
-    try {
-      //Connect to raspberry via SSH
-      client = SSHClient(await SSHSocket.connect('raspberrypi.local', 22, timeout: const Duration(seconds: 2)),
-          username: 'pi', onPasswordRequest: () => 'easv2021');
-
-      connected = true;
-    } catch (_) {
-      connected = false;
-    }
-    notifyListeners();
-    running = false;
+  register() async {
+    print("IOJFDSJFJF");
+    print(config.toString());
+    final sftp = await client.sftp();
+    final file = await sftp.open('/home/pi/denis/plant-control-logger/config.ini', mode: SftpFileOpenMode.write);
+    await file.writeBytes(utf8.encode(config.toString()) as Uint8List);
   }
 
-  pressed() {
-    if (client == null) init();
+  connectSSH() async {
+    print('connecting..');
+    try {
+      //Connect to raspberry via SSH
+      client = SSHClient(
+          await SSHSocket.connect('raspberrypi.local', 22,
+              timeout: Duration(seconds: 5)),
+          username: 'pi',
+          onPasswordRequest: () => 'easv2021');
+
+      connected = true;
+      readConfigFile();
+    } catch (_) {
+      connected = false;
+      configRead = false;
+      notifyListeners();
+    }
+
+  }
+
+  readConfigFile() async {
+    if (configRead) return;
+    print("reading");
+    final sftp = await client.sftp();
+    final file = await sftp.open('/home/pi/denis/plant-control-logger/config.ini');
+    final content = await file.readBytes();
+    config = Config.fromString(latin1.decode(content));
+    configRead = true;
+    notifyListeners();
   }
 }

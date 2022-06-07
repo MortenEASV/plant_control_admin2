@@ -18,7 +18,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var vm = HomePageViewModel.instance;
     vm.addListener(() {
-      setState((){});
+      setState((){
+      });
     });
     var raspsize = 200.0;
     var screenHeight = MediaQuery.of(context).size.height;
@@ -31,7 +32,10 @@ class _HomePageState extends State<HomePage> {
               children: [
                 RaspberryStatusWidget(connected: vm.connected, size: raspsize),
                 ConfigurationWidget(
-                    width: 450, config: vm.config, piConnected: vm.connected),
+                    width: 450, config: vm.config, piConnected: vm.connected, registerOnPressed: () {
+                      print('yo');
+                      vm.register();
+                }),
               ],
             ),
           ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../Models/config.dart';
+import 'package:ini/ini.dart';
 
 class CustomSwitchWidget extends StatefulWidget {
   CustomSwitchWidget(
@@ -8,13 +7,14 @@ class CustomSwitchWidget extends StatefulWidget {
       required this.config,
       required this.width,
       required this.text1,
-      required this.text2, required this.piConnected})
+      required this.text2,
+      required this.piConnected, required this.isSelected})
       : super(key: key);
   Config config;
 
-  Color color = Colors.lightBlue;
+  Color color = Colors.green;
   Color textColor = Colors.black;
-  List<bool> isSelected = List.generate(2, (index) => false);
+  final List<bool> isSelected;
   final double width;
   final String text1;
   final String text2;
@@ -25,8 +25,10 @@ class CustomSwitchWidget extends StatefulWidget {
 }
 
 class CustomSwitchWidgetState extends State<CustomSwitchWidget> {
+
   @override
   Widget build(BuildContext context) {
+    if(widget.isSelected[1]) widget.color = Colors.redAccent;
     return Column(
       children: [
         const Padding(padding: EdgeInsets.all(5)),
@@ -37,14 +39,18 @@ class CustomSwitchWidgetState extends State<CustomSwitchWidget> {
             selectedColor: widget.textColor,
             isSelected: widget.isSelected,
             children: [
-              SizedBox(width: widget.width / 2, child: Center(child: Text(widget.text1))),
-              SizedBox(width: widget.width / 2, child: Center(child: Text(widget.text2))),
+              SizedBox(
+                  width: widget.width / 2,
+                  child: Center(child: Text(widget.text1))),
+              SizedBox(
+                  width: widget.width / 2,
+                  child: Center(child: Text(widget.text2))),
             ],
             onPressed: (index) {
               if (!widget.piConnected) return;
               switch (index) {
                 case 0:
-                  widget.color = Colors.lightBlue;
+                  widget.color = Colors.green;
                   widget.isSelected[0] = true;
                   widget.isSelected[1] = false;
                   break;
