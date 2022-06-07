@@ -44,18 +44,41 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                 height: 150,
                 child: Column(
                   children: [
-                    CustomTextFormFieldWidget(
-                        hintText: "Logger ID",
-                        enabled: false,
-                        text: widget.config.get("Logging", "LoggerId")!,
-                        onTextChanged: (text) =>
-                            widget.config.set("Logging", "LoggerId", text)),
-                    CustomTextFormFieldWidget(
-                        hintText: "Pairing ID",
-                        enabled: false,
-                        text: widget.config.get("Logging", "PairingId")!,
-                        onTextChanged: (text) =>
-                            widget.config.set("Logging", "PairingId", text)),
+                    Row(
+                      children: [
+                        const Padding(padding: EdgeInsets.all(6)),
+                        CustomTextFormFieldWidget(
+                            width: 100,
+                            hintText: "Logger ID",
+                            enabled: false,
+                            text: widget.config.get("Logging", "LoggerId")!,
+                            onTextChanged: (text) =>
+                                widget.config.set("Logging", "LoggerId", text)),
+                        CustomTextFormFieldWidget(
+                            width: 100,
+                            hintText: "Pairing ID",
+                            enabled: widget.piConnected,
+                            text: widget.config.get("Logging", "PairingId")!,
+                            onTextChanged: (text) => widget.config
+                                .set("Logging", "PairingId", text)),
+                      ],
+                    ),
+                    CustomSwitchWidget(
+                        config: widget.config,
+                        width: 200,
+                        text1: 'Active',
+                        text2: 'Inactive',
+                        piConnected: widget.piConnected,
+                        isSelected: List<bool>.of({
+                          widget.config
+                                  .get("Logging", "Active")!
+                                  .toLowerCase() ==
+                              "true",
+                          !(widget.config
+                                  .get("Logging", "Active")!
+                                  .toLowerCase() ==
+                              "true")
+                        })),
                   ],
                 ),
               ),
@@ -138,29 +161,11 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
             ],
           ),
           Padding(padding: EdgeInsets.all(widget.padding)),
-          Row(
-            children: [
-              const Padding(padding: EdgeInsets.all(5)),
-              CustomSwitchWidget(
-                  config: widget.config,
-                  width: 200,
-                  text1: 'Active',
-                  text2: 'Inactive',
-                  piConnected: widget.piConnected,
-                  isSelected: List<bool>.of({
-                    widget.config.get("Logging", "Active")!.toLowerCase() ==
-                        "true",
-                    !(widget.config.get("Logging", "Active")!.toLowerCase() ==
-                        "true")
-                  })),
-              const Padding(padding: EdgeInsets.all(40)),
-              CustomTextButton(
-                  text: "Register", onPressed: (){
+          CustomTextButton(
+              text: "Register",
+              onPressed: () {
                 widget.registerOnPressed();
               }),
-            ],
-
-          ),
         ],
       ),
     );

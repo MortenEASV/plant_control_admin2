@@ -34,12 +34,13 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.5
-  dartssh2: ^2.7.1
+  dartssh2: ^2.7.1            #Used for making ssh connection to raspberry, and fetching config file with SFTP
   image: ^3.2.0
-  pretty_qr_code: ^2.0.2
-  window_manager: ^0.2.5
-  connectivity_plus: ^2.3.2
-  ini: ^2.1.0
+  pretty_qr_code: ^2.0.2      #Used for generating QR codes
+  window_manager: ^0.2.5      #Used for limiting window size, and settings default size
+  connectivity_plus: ^2.3.2   #Used for subscription events when network status changes, like plugging in an ethernet cable so we know when to re-check the raspberry status
+  ini: ^2.1.0                 #Used for parsing and editing the config file from the raspberry
+  http: ^0.13.4               #Used for post requests for registering a logger with the Rest api
 
 dev_dependencies:
   flutter_test:

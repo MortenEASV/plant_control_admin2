@@ -21,20 +21,19 @@ class _HomePageState extends State<HomePage> {
       setState((){
       });
     });
-    var raspsize = 200.0;
     var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Row(
         children: [
-          Container(
+          SizedBox(
             width: 600,
             child: Column(
               children: [
-                RaspberryStatusWidget(connected: vm.connected, size: raspsize),
+                RaspberryStatusWidget(connected: vm.connected, size: 200),
+                const Padding(padding: EdgeInsets.all(5)),
                 ConfigurationWidget(
                     width: 450, config: vm.config, piConnected: vm.connected, registerOnPressed: () {
-                      print('yo');
-                      vm.register();
+                      vm.registerOnClick();
                 }),
               ],
             ),
@@ -42,7 +41,7 @@ class _HomePageState extends State<HomePage> {
           //Vertical line
           Container(height: screenHeight, width: 0.5, color: Colors.black),
 
-          SizedBox(width: 300, child: BarcodeWidget(img: vm.img, qrSize: 200.0))
+          BarcodeWidget(qrCenterImg: vm.qrCenterImg, size: 300.0, qrPlaceholderImg: vm.qrPlaceholderImg, content: vm.config.get("Logging", 'LoggerId')!)
         ],
       ),
     );
