@@ -4,6 +4,7 @@ import 'package:plant_control_admin/Views/home_page.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
 

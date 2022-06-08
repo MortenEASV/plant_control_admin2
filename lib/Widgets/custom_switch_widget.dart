@@ -46,18 +46,16 @@ class CustomSwitchWidgetState extends State<CustomSwitchWidget> {
     return Column(
       children: [
         const Padding(padding: EdgeInsets.all(5)),
-        SizedBox(
-          height: 53,
-          child: ToggleButtons(
+        ToggleButtons(
             fillColor: widget.color,
             selectedColor: widget.textColor,
             isSelected: widget.isSelected,
             children: [
               SizedBox(
-                  width: widget.width / 2,
+                  width: widget.width / 2 - 2,
                   child: Center(child: Text(widget.text1))),
               SizedBox(
-                  width: widget.width / 2,
+                  width: widget.width / 2 - 2,
                   child: Center(child: Text(widget.text2))),
             ],
             onPressed: (index) {
@@ -79,7 +77,7 @@ class CustomSwitchWidgetState extends State<CustomSwitchWidget> {
               setState(() {});
             },
           ),
-        ),
+
       ],
     );
   }

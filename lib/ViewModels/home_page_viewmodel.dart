@@ -10,6 +10,7 @@ import 'package:dartssh2/dartssh2.dart';
 import 'package:image/image.dart';
 import 'package:ini/ini.dart';
 import 'package:http/http.dart' as http;
+import 'package:plant_control_admin/enumerators.dart';
 
 
 class HomePageViewModel with ChangeNotifier {
@@ -26,6 +27,7 @@ class HomePageViewModel with ChangeNotifier {
   //var img = NetworkImage("https://cdn-icons-png.flaticon.com/512/964/964748.png");
   bool connected = false;
   bool configRead = false;
+  Config defaultConfig = Config();
   Config config = Config();
 
 
@@ -40,12 +42,20 @@ class HomePageViewModel with ChangeNotifier {
     });
   }
 
-  registerOnClick() async {
-    if (!connected) return;   //Guard clause
+  Future<bool> registerOnClick() async {
+    if (!connected) return false;   //Guard clause
 
     saveOnClick();
+
+    //If logger already has an ID, we make a delete request for the old one
+    if (config.get('Logging', 'LoggerId')!.isNotEmpty) {
+      var res = await request(config.get('Logging', 'LoggerId')!, HttpRequestType.Delete);
+      print(res.statusCode);
+    }
+
     //Make post request
-    var response = await postLogger("Registered from plant_control_admin");
+    var response = await request("Registered from plant_control_admin", HttpRequestType.Post);
+    if (response.statusCode != 201) return false; //Guard clause
 
     //Decode Json to map
     Map<String, dynamic> map = jsonDecode(response.body);
@@ -53,23 +63,35 @@ class HomePageViewModel with ChangeNotifier {
     //Get id from map
     String id = map['_id'];
 
-    print(id);
     config.set("Logging", "LoggerId", id);
     notifyListeners();
 
+    return true;
   }
 
-  Future<http.Response> postLogger(String name) async {
-    return http.post(
-      Uri.parse('${config.get("Logging", 'RestUrl')!}/loggers'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'name': name,
-      }),
-    );
+  Future<http.Response> request(String param, HttpRequestType type) async {
+    var url = Uri.parse('${config.get("Logging", 'RestUrl')!}/loggers');
+    switch(type){
+
+      case HttpRequestType.Post:
+        return http.post(
+          url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(<String, String>{
+            'name': param,
+          }),
+        );
+
+      case HttpRequestType.Delete:
+        return http.delete(
+          Uri.parse('$url/$param'),
+        );
+    }
+
   }
+
 
   connectSSH() async {
     try {
@@ -84,6 +106,7 @@ class HomePageViewModel with ChangeNotifier {
       client.done.then((value) {
         connected = false;
         configRead = false;
+        config = defaultConfig;
         notifyListeners();
       });
 
@@ -119,23 +142,24 @@ class HomePageViewModel with ChangeNotifier {
 
   //Initialize a default config for when a raspberry is not connected, or when a config file could not be found
   initConfig() {
-    config.addSection("Logging");
-    config.addSection("Air");
-    config.addSection("Soil");
+    defaultConfig.addSection("Logging");
+    defaultConfig.addSection("Air");
+    defaultConfig.addSection("Soil");
 
-    config.set("Logging", "LoggerId", "");
-    config.set("Logging", "PairingId", "");
-    config.set("Logging", "Active", "False");
-    config.set("Logging", "HubUrl", "http://40.87.132.220:9093/hubs/logger");
-    config.set("Logging", "RestUrl", "http://40.87.132.220:9092");
+    defaultConfig.set("Logging", "LoggerId", "");
+    defaultConfig.set("Logging", "PairingId", "");
+    defaultConfig.set("Logging", "Active", "False");
+    defaultConfig.set("Logging", "HubUrl", "");
+    defaultConfig.set("Logging", "RestUrl", "");
 
-    config.set("Air", "MinHumid", "0.0");
-    config.set("Air", "MaxHumid", "0.0");
-    config.set("Air", "MinTemp", "0.0");
-    config.set("Air", "MaxTemp", "0.0");
+    defaultConfig.set("Air", "MinHumid", "");
+    defaultConfig.set("Air", "MaxHumid", "");
+    defaultConfig.set("Air", "MinTemp", "");
+    defaultConfig.set("Air", "MaxTemp", "");
 
-    config.set("Soil", "Moist", "0.0");
-    config.set("Soil", "Dry", "0.0");
+    defaultConfig.set("Soil", "Moist", "");
+    defaultConfig.set("Soil", "Dry", "");
+    config = defaultConfig;
   }
 
   saveOnClick() async {

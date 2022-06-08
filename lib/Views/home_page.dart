@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:plant_control_admin/Widgets/alert_widget.dart';
 import 'package:plant_control_admin/Widgets/barcode_widget.dart';
 import 'package:plant_control_admin/Widgets/configuration_widget.dart';
 import 'package:plant_control_admin/Widgets/raspberry_status_widget.dart';
@@ -15,13 +16,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var vm = HomePageViewModel.instance;
+
   @override
-  initState(){
+  initState() {
     super.initState();
     vm.addListener(() {
-      setState((){});
+      setState(() {});
     });
   }
+
   @override
   Widget build(BuildContext context) {
     print('building homepage');
@@ -36,14 +39,33 @@ class _HomePageState extends State<HomePage> {
                 RaspberryStatusWidget(connected: vm.connected, size: 200),
                 const Padding(padding: EdgeInsets.all(5)),
                 ConfigurationWidget(
-                    width: 450, config: vm.config, piConnected: vm.connected, registerOnPressed: () => vm.registerOnClick(), saveOnPressed: () => vm.saveOnClick(),),
+                        width: 410,
+                        config: vm.config,
+                        piConnected: vm.connected,
+                        registerOnPressed: () async {
+                          if(await vm.registerOnClick()){
+                            showDialog(
+                                context: context,
+                                builder: (ctx) => AlertWidget(text: 'Successfully assigned an ID to this Logger. \n \nYou can now print the associated QR code', title: 'Success', onPressed: () => Navigator.pop(ctx)));
+                          }
+                          else{
+                            showDialog(
+                                context: context,
+                                builder: (ctx) => AlertWidget(text: 'Could not retrieve an ID \n \nPlease check the connection urls and try again', title: 'Failed', onPressed: () => Navigator.pop(ctx)));
+                          }
+                        },
+                        saveOnPressed: () => vm.saveOnClick()),
               ],
             ),
           ),
           //Vertical line
           Container(height: screenHeight, width: 0.5, color: Colors.black),
 
-          BarcodeWidget(qrCenterImg: vm.qrCenterImg, size: 300.0, qrPlaceholderImg: vm.qrPlaceholderImg, content: vm.config.get("Logging", 'LoggerId')!)
+          BarcodeWidget(
+              qrCenterImg: vm.qrCenterImg,
+              size: 300.0,
+              qrPlaceholderImg: vm.qrPlaceholderImg,
+              content: vm.config.get("Logging", 'LoggerId')!)
         ],
       ),
     );

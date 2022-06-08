@@ -10,7 +10,8 @@ class ConfigurationWidget extends StatefulWidget {
       required this.width,
       required this.config,
       required this.piConnected,
-      required this.registerOnPressed, required this.saveOnPressed})
+      required this.registerOnPressed,
+      required this.saveOnPressed})
       : super(key: key);
 
   final double width;
@@ -31,100 +32,89 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
   Widget build(BuildContext context) {
     print('building conf');
     return SizedBox(
-      width: widget.width + widget.padding * 2,
+      width: widget.width,
       child: Column(
         children: [
           Row(
             children: [
-              SizedBox(
-                width: widget.width / 2,
-                height: 150,
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        const Padding(padding: EdgeInsets.all(6)),
-                        CustomTextFormFieldWidget(
-                            width: 100,
-                            hintText: "Logger ID",
-                            enabled: widget.piConnected,
-                            text: widget.config.get("Logging", "LoggerId")!,
-                            onTextChanged: (text) =>
-                                widget.config.set("Logging", "LoggerId", text)),
-                        CustomTextFormFieldWidget(
-                            width: 100,
-                            hintText: "Pairing ID",
-                            enabled: widget.piConnected,
-                            text: widget.config.get("Logging", "PairingId")!,
-                            onTextChanged: (text) => widget.config
-                                .set("Logging", "PairingId", text)),
-                      ],
-                    ),
-                    CustomSwitchWidget(
-                        config: widget.config,
-                        width: 200,
-                        text1: 'Active',
-                        text2: 'Inactive',
-                        piConnected: widget.piConnected,
-                    )],
-                ),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      CustomTextFormFieldWidget(
+                          width: 100,
+                          hintText: "Logger ID",
+                          enabled: widget.piConnected,
+                          text: widget.config.get("Logging", "LoggerId")!,
+                          onTextChanged: (text) =>
+                              widget.config.set("Logging", "LoggerId", text)),
+                      CustomTextFormFieldWidget(
+                          width: 100,
+                          hintText: "Pairing ID",
+                          enabled: widget.piConnected,
+                          text: widget.config.get("Logging", "PairingId")!,
+                          onTextChanged: (text) =>
+                              widget.config.set("Logging", "PairingId", text)),
+                    ],
+                  ),
+                  CustomSwitchWidget(
+                    config: widget.config,
+                    width: 200,
+                    text1: 'Active',
+                    text2: 'Inactive',
+                    piConnected: widget.piConnected,
+                  )
+                ],
               ),
               Padding(padding: EdgeInsets.all(widget.padding)),
-              SizedBox(
-                width: widget.width / 2,
-                height: 150,
-                child: Column(
-                  children: [
-                    CustomTextFormFieldWidget(
-                        hintText: "Hub Url",
-                        enabled: widget.piConnected,
-                        text: widget.config.get("Logging", "HubUrl")!,
-                        onTextChanged: (text) =>
-                            widget.config.set("Logging", "HubUrl", text)),
-                    CustomTextFormFieldWidget(
-                        hintText: "Rest Url",
-                        enabled: widget.piConnected,
-                        text: widget.config.get("Logging", "RestUrl")!,
-                        onTextChanged: (text) =>
-                            widget.config.set("Logging", "RestUrl", text)),
-                  ],
-                ),
+              Column(
+                children: [
+                  CustomTextFormFieldWidget(
+                      hintText: "Hub Url",
+                      enabled: widget.piConnected,
+                      text: widget.config.get("Logging", "HubUrl")!,
+                      onTextChanged: (text) =>
+                          widget.config.set("Logging", "HubUrl", text)),
+                  CustomTextFormFieldWidget(
+                      hintText: "Rest Url",
+                      enabled: widget.piConnected,
+                      text: widget.config.get("Logging", "RestUrl")!,
+                      onTextChanged: (text) =>
+                          widget.config.set("Logging", "RestUrl", text)),
+                ],
               ),
             ],
           ),
+          const Padding(padding: EdgeInsets.all(10)),
           Row(
             children: [
-              SizedBox(
-                width: widget.width / 2,
-                child: Column(
-                  children: [
-                    CustomTextFormFieldWidget(
+              Column(
+                children: [
+                  CustomTextFormFieldWidget(
                       validateNumbers: true,
-                        hintText: "Min Humidity",
-                        enabled: widget.piConnected,
-                        text: widget.config.get("Air", "MinHumid")!,
-                        onTextChanged: (text) =>
-                            widget.config.set("Air", "MinHumid", text)),
-                    CustomTextFormFieldWidget(
-                        validateNumbers: true,
-                        hintText: "Min Temperature",
-                        enabled: widget.piConnected,
-                        text: widget.config.get("Air", "MinTemp")!,
-                        onTextChanged: (text) =>
-                            widget.config.set("Air", "MinTemp", text)),
-                    CustomTextFormFieldWidget(
-                        validateNumbers: true,
-                        hintText: "Moist",
-                        enabled: widget.piConnected,
-                        text: widget.config.get("Soil", "Moist")!,
-                        onTextChanged: (text) =>
-                            widget.config.set("Soil", "Moist", text)),
-                  ],
-                ),
+                      hintText: "Min Humidity",
+                      enabled: widget.piConnected,
+                      text: widget.config.get("Air", "MinHumid")!,
+                      onTextChanged: (text) =>
+                          widget.config.set("Air", "MinHumid", text)),
+                  CustomTextFormFieldWidget(
+                      validateNumbers: true,
+                      hintText: "Min Temperature",
+                      enabled: widget.piConnected,
+                      text: widget.config.get("Air", "MinTemp")!,
+                      onTextChanged: (text) =>
+                          widget.config.set("Air", "MinTemp", text)),
+                  CustomTextFormFieldWidget(
+                      validateNumbers: true,
+                      hintText: "Moist",
+                      enabled: widget.piConnected,
+                      text: widget.config.get("Soil", "Moist")!,
+                      onTextChanged: (text) =>
+                          widget.config.set("Soil", "Moist", text)),
+                ],
               ),
               Padding(padding: EdgeInsets.all(widget.padding)),
               SizedBox(
-                width: widget.width / 2,
                 child: Column(
                   children: [
                     CustomTextFormFieldWidget(
@@ -153,9 +143,8 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
               ),
             ],
           ),
-          Padding(padding: EdgeInsets.all(widget.padding)),
           SizedBox(
-            width: 200 + widget.padding *2,
+            width: 210,
             child: Row(
               children: [
                 CustomTextButton(
@@ -163,7 +152,8 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                     onPressed: () {
                       widget.saveOnPressed();
                     }),
-                Padding(padding: EdgeInsets.symmetric(horizontal: widget.padding)),
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: widget.padding)),
                 CustomTextButton(
                     text: "Register",
                     onPressed: () {

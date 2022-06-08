@@ -1,0 +1,4 @@
+enum HttpRequestType{
+  Post,
+  Delete
+}
