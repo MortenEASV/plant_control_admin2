@@ -43,8 +43,9 @@ class HomePageViewModel with ChangeNotifier {
   registerOnClick() async {
     if (!connected) return;   //Guard clause
 
+    saveOnClick();
     //Make post request
-    var response = await postLogger("testerloggyboi");
+    var response = await postLogger("Registered from plant_control_admin");
 
     //Decode Json to map
     Map<String, dynamic> map = jsonDecode(response.body);
@@ -101,8 +102,10 @@ class HomePageViewModel with ChangeNotifier {
 
     //Read the config file on the raspberry through the sftp protocol
     final sftp = await client.sftp();
+    sftp.close();
     final file = await sftp.open('/home/pi/denis/plant-control-logger/config.ini');
     final content = await file.readBytes();
+
     config = Config.fromString(latin1.decode(content));
     configRead = true;
 
@@ -137,9 +140,13 @@ class HomePageViewModel with ChangeNotifier {
 
   saveOnClick() async {
     //Save the config file on the raspberry through the sftp protocol
+
     final sftp = await client.sftp();
+    sftp.close();
     final file = await sftp.open('/home/pi/denis/plant-control-logger/config.ini', mode: SftpFileOpenMode.write);
     await file.writeBytes(utf8.encode(config.toString()) as Uint8List);
+
+    configRead = false;
   }
 }
 

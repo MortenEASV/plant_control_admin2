@@ -14,11 +14,12 @@ class CustomSwitchWidget extends StatefulWidget {
 
   Color color = Colors.green;
   Color textColor = Colors.black;
-  late final List<bool> isSelected;
+  late List<bool> isSelected;
   final double width;
   final String text1;
   final String text2;
   final bool piConnected;
+  bool initialized = false;
 
   @override
   State<CustomSwitchWidget> createState() => CustomSwitchWidgetState();
@@ -28,16 +29,19 @@ class CustomSwitchWidgetState extends State<CustomSwitchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    widget.isSelected = List<bool>.of({
-      widget.config
-          .get("Logging", "Active")!
-          .toLowerCase() ==
-          "true",
-      !(widget.config
-          .get("Logging", "Active")!
-          .toLowerCase() ==
-          "true")
-    });
+    if (!widget.initialized) {
+      widget.isSelected = List<bool>.of({
+        widget.config
+            .get("Logging", "Active")!
+            .toLowerCase() ==
+            "true",
+        !(widget.config
+            .get("Logging", "Active")!
+            .toLowerCase() ==
+            "true")
+      });
+      widget.initialized = true;
+    }
     if(widget.isSelected[1]) widget.color = Colors.redAccent;
     return Column(
       children: [
@@ -63,11 +67,13 @@ class CustomSwitchWidgetState extends State<CustomSwitchWidget> {
                   widget.color = Colors.green;
                   widget.isSelected[0] = true;
                   widget.isSelected[1] = false;
+                  widget.config.set("Logging", "Active", "True");
                   break;
                 case 1:
                   widget.color = Colors.redAccent;
                   widget.isSelected[0] = false;
                   widget.isSelected[1] = true;
+                  widget.config.set("Logging", "Active", "False");
                   break;
               }
               setState(() {});
