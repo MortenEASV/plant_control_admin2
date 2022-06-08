@@ -10,13 +10,14 @@ class ConfigurationWidget extends StatefulWidget {
       required this.width,
       required this.config,
       required this.piConnected,
-      required this.registerOnPressed})
+      required this.registerOnPressed, required this.saveOnPressed})
       : super(key: key);
 
   final double width;
   final double padding = 5.0;
   final bool piConnected;
   final Function registerOnPressed;
+  final Function saveOnPressed;
 
   //Config parameters
   final Config config;
@@ -27,12 +28,8 @@ class ConfigurationWidget extends StatefulWidget {
 
 class _ConfigurationWidgetState extends State<ConfigurationWidget> {
   @override
-  initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    print('building conf');
     return SizedBox(
       width: widget.width + widget.padding * 2,
       child: Column(
@@ -50,7 +47,7 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                         CustomTextFormFieldWidget(
                             width: 100,
                             hintText: "Logger ID",
-                            enabled: false,
+                            enabled: widget.piConnected,
                             text: widget.config.get("Logging", "LoggerId")!,
                             onTextChanged: (text) =>
                                 widget.config.set("Logging", "LoggerId", text)),
@@ -69,17 +66,7 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                         text1: 'Active',
                         text2: 'Inactive',
                         piConnected: widget.piConnected,
-                        isSelected: List<bool>.of({
-                          widget.config
-                                  .get("Logging", "Active")!
-                                  .toLowerCase() ==
-                              "true",
-                          !(widget.config
-                                  .get("Logging", "Active")!
-                                  .toLowerCase() ==
-                              "true")
-                        })),
-                  ],
+                    )],
                 ),
               ),
               Padding(padding: EdgeInsets.all(widget.padding)),
@@ -112,18 +99,21 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                 child: Column(
                   children: [
                     CustomTextFormFieldWidget(
+                      validateNumbers: true,
                         hintText: "Min Humidity",
                         enabled: widget.piConnected,
                         text: widget.config.get("Air", "MinHumid")!,
                         onTextChanged: (text) =>
                             widget.config.set("Air", "MinHumid", text)),
                     CustomTextFormFieldWidget(
+                        validateNumbers: true,
                         hintText: "Min Temperature",
                         enabled: widget.piConnected,
                         text: widget.config.get("Air", "MinTemp")!,
                         onTextChanged: (text) =>
                             widget.config.set("Air", "MinTemp", text)),
                     CustomTextFormFieldWidget(
+                        validateNumbers: true,
                         hintText: "Moist",
                         enabled: widget.piConnected,
                         text: widget.config.get("Soil", "Moist")!,
@@ -138,18 +128,21 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                 child: Column(
                   children: [
                     CustomTextFormFieldWidget(
+                        validateNumbers: true,
                         hintText: "Max Humidity",
                         enabled: widget.piConnected,
                         text: widget.config.get("Air", "MaxHumid")!,
                         onTextChanged: (text) =>
                             widget.config.set("Air", "MaxHumid", text)),
                     CustomTextFormFieldWidget(
+                        validateNumbers: true,
                         hintText: "Max Temperature",
                         enabled: widget.piConnected,
                         text: widget.config.get("Air", "MaxTemp")!,
                         onTextChanged: (text) =>
                             widget.config.set("Air", "MaxTemp", text)),
                     CustomTextFormFieldWidget(
+                        validateNumbers: true,
                         hintText: "Dry",
                         enabled: widget.piConnected,
                         text: widget.config.get("Soil", "Dry")!,
@@ -161,11 +154,24 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
             ],
           ),
           Padding(padding: EdgeInsets.all(widget.padding)),
-          CustomTextButton(
-              text: "Register",
-              onPressed: () {
-                widget.registerOnPressed();
-              }),
+          SizedBox(
+            width: 200 + widget.padding *2,
+            child: Row(
+              children: [
+                CustomTextButton(
+                    text: "Save",
+                    onPressed: () {
+                      widget.saveOnPressed();
+                    }),
+                Padding(padding: EdgeInsets.symmetric(horizontal: widget.padding)),
+                CustomTextButton(
+                    text: "Register",
+                    onPressed: () {
+                      widget.registerOnPressed();
+                    }),
+              ],
+            ),
+          ),
         ],
       ),
     );

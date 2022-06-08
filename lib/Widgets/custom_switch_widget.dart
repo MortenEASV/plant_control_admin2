@@ -8,13 +8,13 @@ class CustomSwitchWidget extends StatefulWidget {
       required this.width,
       required this.text1,
       required this.text2,
-      required this.piConnected, required this.isSelected})
+      required this.piConnected})
       : super(key: key);
   Config config;
 
   Color color = Colors.green;
   Color textColor = Colors.black;
-  final List<bool> isSelected;
+  late final List<bool> isSelected;
   final double width;
   final String text1;
   final String text2;
@@ -28,6 +28,16 @@ class CustomSwitchWidgetState extends State<CustomSwitchWidget> {
 
   @override
   Widget build(BuildContext context) {
+    widget.isSelected = List<bool>.of({
+      widget.config
+          .get("Logging", "Active")!
+          .toLowerCase() ==
+          "true",
+      !(widget.config
+          .get("Logging", "Active")!
+          .toLowerCase() ==
+          "true")
+    });
     if(widget.isSelected[1]) widget.color = Colors.redAccent;
     return Column(
       children: [

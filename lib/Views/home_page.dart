@@ -14,13 +14,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var vm = HomePageViewModel.instance;
+  @override
+  initState(){
+    super.initState();
+    vm.addListener(() {
+      setState((){});
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    var vm = HomePageViewModel.instance;
-    vm.addListener(() {
-      setState((){
-      });
-    });
+    print('building homepage');
     var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Row(
@@ -32,9 +36,7 @@ class _HomePageState extends State<HomePage> {
                 RaspberryStatusWidget(connected: vm.connected, size: 200),
                 const Padding(padding: EdgeInsets.all(5)),
                 ConfigurationWidget(
-                    width: 450, config: vm.config, piConnected: vm.connected, registerOnPressed: () {
-                      vm.registerOnClick();
-                }),
+                    width: 450, config: vm.config, piConnected: vm.connected, registerOnPressed: () => vm.registerOnClick(), saveOnPressed: () => vm.saveOnClick(),),
               ],
             ),
           ),

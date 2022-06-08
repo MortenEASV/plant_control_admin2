@@ -36,20 +36,12 @@ class HomePageViewModel with ChangeNotifier {
 
     //Initialize network state listener
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.ethernet) {
-        connectSSH();
-      }
+      connectSSH();
     });
   }
 
   registerOnClick() async {
-
     if (!connected) return;   //Guard clause
-
-    //Save the config file on the raspberry through the sftp protocol
-    final sftp = await client.sftp();
-    final file = await sftp.open('/home/pi/denis/plant-control-logger/config.ini', mode: SftpFileOpenMode.write);
-    await file.writeBytes(utf8.encode(config.toString()) as Uint8List);
 
     //Make post request
     var response = await postLogger("testerloggyboi");
@@ -61,8 +53,8 @@ class HomePageViewModel with ChangeNotifier {
     String id = map['_id'];
 
     print(id);
-    //config.set("Logging", "LoggerId", id);
-
+    config.set("Logging", "LoggerId", id);
+    notifyListeners();
 
   }
 
@@ -104,6 +96,7 @@ class HomePageViewModel with ChangeNotifier {
   }
 
   readConfigFile() async {
+    print('trying to read config');
     if (configRead) return;   //Guard clause
 
     //Read the config file on the raspberry through the sftp protocol
@@ -113,7 +106,11 @@ class HomePageViewModel with ChangeNotifier {
     config = Config.fromString(latin1.decode(content));
     configRead = true;
 
+
     notifyListeners();
+    print('notifying');
+
+
   }
 
 
@@ -126,8 +123,8 @@ class HomePageViewModel with ChangeNotifier {
     config.set("Logging", "LoggerId", "");
     config.set("Logging", "PairingId", "");
     config.set("Logging", "Active", "False");
-    config.set("Logging", "HubUrl", "http://40.87.132.220:8093/hubs/logger");
-    config.set("Logging", "RestUrl", "http://40.87.132.220:8092");
+    config.set("Logging", "HubUrl", "http://40.87.132.220:9093/hubs/logger");
+    config.set("Logging", "RestUrl", "http://40.87.132.220:9092");
 
     config.set("Air", "MinHumid", "0.0");
     config.set("Air", "MaxHumid", "0.0");
@@ -136,6 +133,13 @@ class HomePageViewModel with ChangeNotifier {
 
     config.set("Soil", "Moist", "0.0");
     config.set("Soil", "Dry", "0.0");
+  }
+
+  saveOnClick() async {
+    //Save the config file on the raspberry through the sftp protocol
+    final sftp = await client.sftp();
+    final file = await sftp.open('/home/pi/denis/plant-control-logger/config.ini', mode: SftpFileOpenMode.write);
+    await file.writeBytes(utf8.encode(config.toString()) as Uint8List);
   }
 }
 
