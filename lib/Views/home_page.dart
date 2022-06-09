@@ -39,22 +39,49 @@ class _HomePageState extends State<HomePage> {
                 RaspberryStatusWidget(connected: vm.connected, size: 200),
                 const Padding(padding: EdgeInsets.all(5)),
                 ConfigurationWidget(
-                        width: 410,
-                        config: vm.config,
-                        piConnected: vm.connected,
-                        registerOnPressed: () async {
-                          if(await vm.registerOnClick()){
-                            showDialog(
-                                context: context,
-                                builder: (ctx) => AlertWidget(text: 'Successfully assigned an ID to this Logger. \n \nYou can now print the associated QR code', title: 'Success', onPressed: () => Navigator.pop(ctx)));
-                          }
-                          else{
-                            showDialog(
-                                context: context,
-                                builder: (ctx) => AlertWidget(text: 'Could not retrieve an ID \n \nPlease check the connection urls and try again', title: 'Failed', onPressed: () => Navigator.pop(ctx)));
-                          }
-                        },
-                        saveOnPressed: () => vm.saveOnClick()),
+                    width: 410,
+                    config: vm.config,
+                    piConnected: vm.connected,
+                    registerOnPressed: () async {
+                      if (await vm.registerOnClick()) {
+                        showDialog(
+                            context: context,
+                            builder: (ctx) => AlertWidget(
+                                text:
+                                    'Successfully assigned an ID to this Logger. \n \nYou can now print the associated QR code',
+                                title: 'Success',
+                                onPressed: () => Navigator.pop(ctx)));
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (ctx) => AlertWidget(
+                                text:
+                                    'Could not retrieve an ID \n \nPlease check the connection and try again',
+                                title: 'Error',
+                                onPressed: () => Navigator.pop(ctx)));
+                      }
+                    },
+                    saveOnPressed: () async {
+                      if (await vm.saveOnClick()) {
+                        showDialog(
+                            context: context,
+                            builder: (ctx) => AlertWidget(
+                                text:
+                                'Saved successfully',
+                                title: 'Success',
+                                onPressed: () => Navigator.pop(ctx)));
+                      }
+                      else{
+                        showDialog(
+                            context: context,
+                            builder: (ctx) => AlertWidget(
+                                text:
+                                'Could not save \n \nCheck connection',
+                                title: 'Error',
+                                onPressed: () => Navigator.pop(ctx)));
+                      }
+
+                    }),
               ],
             ),
           ),

@@ -162,15 +162,23 @@ class HomePageViewModel with ChangeNotifier {
     config = defaultConfig;
   }
 
-  saveOnClick() async {
-    //Save the config file on the raspberry through the sftp protocol
+  //Save the config file on the raspberry through the sftp protocol
+  Future<bool> saveOnClick() async {
+    try{
+      final sftp = await client.sftp();
+      sftp.close();
+      final file = await sftp.open('/home/pi/denis/plant-control-logger/config.ini', mode: SftpFileOpenMode.write);
+      var res = await file.writeBytes(utf8.encode(config.toString()) as Uint8List);
+      configRead = false;
+      readConfigFile();
+      return true;
+    }
+    catch(e){
+      return false;
+    }
 
-    final sftp = await client.sftp();
-    sftp.close();
-    final file = await sftp.open('/home/pi/denis/plant-control-logger/config.ini', mode: SftpFileOpenMode.write);
-    await file.writeBytes(utf8.encode(config.toString()) as Uint8List);
 
-    configRead = false;
+
   }
 }
 

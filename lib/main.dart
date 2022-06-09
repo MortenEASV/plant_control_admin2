@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:plant_control_admin/Views/home_page.dart';
 import 'package:window_manager/window_manager.dart';
