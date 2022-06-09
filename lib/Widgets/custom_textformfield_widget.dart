@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:ini/ini.dart';
 
+import '../enumerators.dart';
+
 class CustomTextFormFieldWidget extends StatefulWidget {
   CustomTextFormFieldWidget(
       {Key? key,
       required this.hintText,
+      required this.labelText,
       this.enabled = true,
       this.width = 200,
       this.text = "",
       required this.onTextChanged,
-      this.validateNumbers = false})
+      this.validationType = ValidationType.none, this.readonly = false})
       : super(key: key);
   final String hintText;
+  final String labelText;
   final String text;
   final bool enabled;
+  final bool readonly;
   final double width;
   final Function onTextChanged;
-  final bool validateNumbers;
+  final ValidationType validationType;
 
   final TextEditingController textEditingController = TextEditingController();
 
@@ -43,20 +48,32 @@ class _CustomTextFormFieldWidgetState extends State<CustomTextFormFieldWidget> {
             },
             child: TextFormField(
               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Field cannot be empty';
-                }
-                if (widget.validateNumbers) {
-                  if (!RegExp(r'^\d+(\.\d+)*$').hasMatch(value)) {
-                    return 'Field only accepts numbers';
-                  }
+                if (value == null) return null;
+                switch(widget.validationType){
+                  case ValidationType.numbers:
+                    if (!RegExp(r'^\d+(\.\d+)*').hasMatch(value) || value.isEmpty) {
+                      return 'Only numbers allowed';
+                    }
+                    break;
+                  case ValidationType.ip:
+                    if (!RegExp(r'^\d+(\.\d+)*:\d{1,6}$').hasMatch(value) || value.isEmpty) {
+                      return 'Valid format: 0.0.0.0:0000';
+                    }
+                    break;
+                  case ValidationType.objectID:
+                    if (!RegExp(r'^[a-f\d]{24}$').hasMatch(value) && value.isNotEmpty) {
+                      return 'Only object IDs allowed';
+                    }
+                    break;
+                  default:
+                    return null;
                 }
                 return null;
               },
               autovalidateMode: AutovalidateMode.onUserInteraction,
               controller: widget.textEditingController..text = widget.text,
               decoration: InputDecoration(
-                labelText: widget.hintText,
+                labelText: widget.labelText,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 hintText: widget.hintText,
                 fillColor: Colors.grey,
@@ -66,6 +83,7 @@ class _CustomTextFormFieldWidgetState extends State<CustomTextFormFieldWidget> {
                 ),
               ),
               enabled: widget.enabled,
+              readOnly: widget.readonly,
             ),
           ),
         ],

@@ -45,14 +45,17 @@ class HomePageViewModel with ChangeNotifier {
   Future<bool> registerOnClick() async {
     if (!connected) return false;   //Guard clause
 
+    /*  //Not enabled
     //If logger already has an ID, we make a delete request for the old one
     if (config.get('Logging', 'LoggerId')!.isNotEmpty) {
-      var res = await request(config.get('Logging', 'LoggerId')!, HttpRequestType.Delete);
+      var res = await request(config.get('Logging', 'LoggerId')!, HttpRequestType.delete);
       print(res.statusCode);
     }
 
+     */
+
     //Make post request
-    var response = await request("Registered from plant_control_admin", HttpRequestType.Post);
+    var response = await request("Registered from plant_control_admin", HttpRequestType.post);
     if (response.statusCode != 201) return false; //Guard clause
 
     //Decode Json to map
@@ -69,10 +72,10 @@ class HomePageViewModel with ChangeNotifier {
   }
 
   Future<http.Response> request(String param, HttpRequestType type) async {
-    var url = Uri.parse('${config.get("Logging", 'RestUrl')!}/loggers');
+    var url = Uri.parse('http://${config.get("Logging", 'RestUrl')!}/loggers');
     switch(type){
 
-      case HttpRequestType.Post:
+      case HttpRequestType.post:
         return http.post(
           url,
           headers: <String, String>{
@@ -83,7 +86,7 @@ class HomePageViewModel with ChangeNotifier {
           }),
         );
 
-      case HttpRequestType.Delete:
+      case HttpRequestType.delete:
         return http.delete(
           Uri.parse('$url/$param'),
         );
@@ -134,8 +137,14 @@ class HomePageViewModel with ChangeNotifier {
 
     notifyListeners();
     print('notifying');
+  }
 
-
+  stopProgram() async{
+    var res = client.run('pkill -f -2 -e main.py');
+    print(res);
+  }
+  startProgram() async{
+   await client.run('(cd ~/denis/plant-control-logger; python3 main.py)');
   }
 
 
@@ -148,7 +157,7 @@ class HomePageViewModel with ChangeNotifier {
     defaultConfig.set("Logging", "LoggerId", "");
     defaultConfig.set("Logging", "PairingId", "");
     defaultConfig.set("Logging", "Active", "False");
-    defaultConfig.set("Logging", "HubUrl", "");
+    defaultConfig.set("Logging", "SocketUrl", "");
     defaultConfig.set("Logging", "RestUrl", "");
 
     defaultConfig.set("Air", "MinHumid", "");
@@ -164,12 +173,14 @@ class HomePageViewModel with ChangeNotifier {
   //Save the config file on the raspberry through the sftp protocol
   Future<bool> saveOnClick() async {
     try{
+      await stopProgram();
       final sftp = await client.sftp();
       sftp.close();
       final file = await sftp.open('/home/pi/denis/plant-control-logger/config.ini', mode: SftpFileOpenMode.write);
-      var res = await file.writeBytes(utf8.encode(config.toString()) as Uint8List);
+      await file.writeBytes(utf8.encode(config.toString()) as Uint8List);
       configRead = false;
       readConfigFile();
+      await startProgram();
       return true;
     }
     catch(e){

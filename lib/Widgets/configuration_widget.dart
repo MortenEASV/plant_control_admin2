@@ -3,6 +3,7 @@ import 'package:ini/ini.dart';
 import 'package:plant_control_admin/Widgets/custom_switch_widget.dart';
 import 'package:plant_control_admin/Widgets/custom_text_button.dart';
 import 'package:plant_control_admin/Widgets/custom_textformfield_widget.dart';
+import 'package:plant_control_admin/enumerators.dart';
 
 class ConfigurationWidget extends StatefulWidget {
   const ConfigurationWidget(
@@ -42,15 +43,20 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                   Row(
                     children: [
                       CustomTextFormFieldWidget(
+                        validationType: ValidationType.objectID,
+                          readonly: true,
                           width: 100,
                           hintText: "Logger ID",
+                          labelText: 'Logger ID',
                           enabled: widget.piConnected,
                           text: widget.config.get("Logging", "LoggerId")!,
                           onTextChanged: (text) =>
                               widget.config.set("Logging", "LoggerId", text)),
                       CustomTextFormFieldWidget(
+                        validationType: ValidationType.objectID,
                           width: 100,
                           hintText: "Pairing ID",
+                          labelText: 'Pairing ID',
                           enabled: widget.piConnected,
                           text: widget.config.get("Logging", "PairingId")!,
                           onTextChanged: (text) =>
@@ -70,13 +76,17 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
               Column(
                 children: [
                   CustomTextFormFieldWidget(
-                      hintText: "Hub Url",
+                      validationType: ValidationType.ip,
+                      hintText: "e.g. 40.87.132.220:9093",
+                      labelText: "Hub Address",
                       enabled: widget.piConnected,
-                      text: widget.config.get("Logging", "HubUrl")!,
+                      text: widget.config.get("Logging", "SocketUrl")!,
                       onTextChanged: (text) =>
-                          widget.config.set("Logging", "HubUrl", text)),
+                          widget.config.set("Logging", "SocketUrl", text)),
                   CustomTextFormFieldWidget(
-                      hintText: "Rest Url",
+                      validationType: ValidationType.ip,
+                      hintText: "e.g. 40.87.132.220:9092",
+                      labelText: "Rest Address",
                       enabled: widget.piConnected,
                       text: widget.config.get("Logging", "RestUrl")!,
                       onTextChanged: (text) =>
@@ -91,22 +101,25 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
               Column(
                 children: [
                   CustomTextFormFieldWidget(
-                      validateNumbers: true,
+                      validationType: ValidationType.numbers,
                       hintText: "Min Humidity",
+                      labelText: 'Min Humidity',
                       enabled: widget.piConnected,
                       text: widget.config.get("Air", "MinHumid")!,
                       onTextChanged: (text) =>
                           widget.config.set("Air", "MinHumid", text)),
                   CustomTextFormFieldWidget(
-                      validateNumbers: true,
+                      validationType: ValidationType.numbers,
                       hintText: "Min Temperature",
+                      labelText: "Min Temperature",
                       enabled: widget.piConnected,
                       text: widget.config.get("Air", "MinTemp")!,
                       onTextChanged: (text) =>
                           widget.config.set("Air", "MinTemp", text)),
                   CustomTextFormFieldWidget(
-                      validateNumbers: true,
+                      validationType: ValidationType.numbers,
                       hintText: "Moist",
+                      labelText: "Moist",
                       enabled: widget.piConnected,
                       text: widget.config.get("Soil", "Moist")!,
                       onTextChanged: (text) =>
@@ -118,22 +131,25 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                 child: Column(
                   children: [
                     CustomTextFormFieldWidget(
-                        validateNumbers: true,
+                        validationType: ValidationType.numbers,
                         hintText: "Max Humidity",
+                        labelText: "Max Humidity",
                         enabled: widget.piConnected,
                         text: widget.config.get("Air", "MaxHumid")!,
                         onTextChanged: (text) =>
                             widget.config.set("Air", "MaxHumid", text)),
                     CustomTextFormFieldWidget(
-                        validateNumbers: true,
+                        validationType: ValidationType.numbers,
                         hintText: "Max Temperature",
+                        labelText: "Max Temperature",
                         enabled: widget.piConnected,
                         text: widget.config.get("Air", "MaxTemp")!,
                         onTextChanged: (text) =>
                             widget.config.set("Air", "MaxTemp", text)),
                     CustomTextFormFieldWidget(
-                        validateNumbers: true,
+                        validationType: ValidationType.numbers,
                         hintText: "Dry",
+                        labelText: "Dry",
                         enabled: widget.piConnected,
                         text: widget.config.get("Soil", "Dry")!,
                         onTextChanged: (text) =>
