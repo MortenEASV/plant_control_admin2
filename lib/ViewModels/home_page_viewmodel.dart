@@ -45,8 +45,6 @@ class HomePageViewModel with ChangeNotifier {
   Future<bool> registerOnClick() async {
     if (!connected) return false;   //Guard clause
 
-    saveOnClick();
-
     //If logger already has an ID, we make a delete request for the old one
     if (config.get('Logging', 'LoggerId')!.isNotEmpty) {
       var res = await request(config.get('Logging', 'LoggerId')!, HttpRequestType.Delete);
@@ -64,6 +62,7 @@ class HomePageViewModel with ChangeNotifier {
     String id = map['_id'];
 
     config.set("Logging", "LoggerId", id);
+    saveOnClick();
     notifyListeners();
 
     return true;
