@@ -1,3 +1,3 @@
-# plant_control_admin
+# plant-control-admin
 
 Administration and configuration app for plant control loggers
