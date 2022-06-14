@@ -175,7 +175,9 @@ class HomePageViewModel with ChangeNotifier {
       readConfigFile();
       await startProgram();
       return true;
-    } catch (e) {
+    }
+    catch(e){
+      print(e.toString());
       return false;
     }
   }
