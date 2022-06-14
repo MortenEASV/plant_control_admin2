@@ -1,10 +1,3 @@
-enum HttpRequestType{
-  post,
-  delete
-}
-enum ValidationType{
-  none,
-  numbers,
-  ip,
-  objectID
-}
+enum HttpRequestType { post, delete }
+
+enum ValidationType { none, numbers, ip, objectID }
