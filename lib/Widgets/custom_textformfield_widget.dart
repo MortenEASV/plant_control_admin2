@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ini/ini.dart';
 
 import '../enumerators.dart';
 
@@ -12,7 +11,8 @@ class CustomTextFormFieldWidget extends StatefulWidget {
       this.width = 200,
       this.text = "",
       required this.onTextChanged,
-      this.validationType = ValidationType.none, this.readonly = false})
+      this.validationType = ValidationType.none,
+      this.readonly = false})
       : super(key: key);
   final String hintText;
   final String labelText;
@@ -32,9 +32,10 @@ class CustomTextFormFieldWidget extends StatefulWidget {
 
 class _CustomTextFormFieldWidgetState extends State<CustomTextFormFieldWidget> {
   @override
-  initState(){
+  initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -49,19 +50,22 @@ class _CustomTextFormFieldWidgetState extends State<CustomTextFormFieldWidget> {
             child: TextFormField(
               validator: (value) {
                 if (value == null) return null;
-                switch(widget.validationType){
+                switch (widget.validationType) {
                   case ValidationType.numbers:
-                    if (!RegExp(r'^\d+(\.\d+)*').hasMatch(value) || value.isEmpty) {
+                    if (!RegExp(r'^\d+(\.\d+)*').hasMatch(value) ||
+                        value.isEmpty) {
                       return 'Only numbers allowed';
                     }
                     break;
                   case ValidationType.ip:
-                    if (!RegExp(r'^\d+(\.\d+)*:\d{1,6}$').hasMatch(value) || value.isEmpty) {
+                    if (!RegExp(r'^\d+(\.\d+)*:\d{1,6}$').hasMatch(value) ||
+                        value.isEmpty) {
                       return 'Valid format: 0.0.0.0:0000';
                     }
                     break;
                   case ValidationType.objectID:
-                    if (!RegExp(r'^[a-f\d]{24}$').hasMatch(value) && value.isNotEmpty) {
+                    if (!RegExp(r'^[a-f\d]{24}$').hasMatch(value) &&
+                        value.isNotEmpty) {
                       return 'Only object IDs allowed';
                     }
                     break;
