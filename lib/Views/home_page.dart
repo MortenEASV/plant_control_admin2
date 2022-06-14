@@ -1,10 +1,9 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:plant_control_admin/Widgets/alert_widget.dart';
 import 'package:plant_control_admin/Widgets/barcode_widget.dart';
 import 'package:plant_control_admin/Widgets/configuration_widget.dart';
 import 'package:plant_control_admin/Widgets/raspberry_status_widget.dart';
-import 'package:pretty_qr_code/pretty_qr_code.dart';
+
 import '../ViewModels/home_page_viewmodel.dart';
 
 class HomePage extends StatefulWidget {
@@ -66,21 +65,17 @@ class _HomePageState extends State<HomePage> {
                         showDialog(
                             context: context,
                             builder: (ctx) => AlertWidget(
-                                text:
-                                'Saved successfully',
+                                text: 'Saved successfully',
                                 title: 'Success',
                                 onPressed: () => Navigator.pop(ctx)));
-                      }
-                      else{
+                      } else {
                         showDialog(
                             context: context,
                             builder: (ctx) => AlertWidget(
-                                text:
-                                'Could not save \n \nCheck connection',
+                                text: 'Could not save \n \nCheck connection',
                                 title: 'Error',
                                 onPressed: () => Navigator.pop(ctx)));
                       }
-
                     }),
               ],
             ),

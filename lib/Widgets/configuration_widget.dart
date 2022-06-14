@@ -43,7 +43,7 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                   Row(
                     children: [
                       CustomTextFormFieldWidget(
-                        validationType: ValidationType.objectID,
+                          validationType: ValidationType.objectID,
                           readonly: true,
                           width: 100,
                           hintText: "Logger ID",
@@ -53,7 +53,7 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                           onTextChanged: (text) =>
                               widget.config.set("Logging", "LoggerId", text)),
                       CustomTextFormFieldWidget(
-                        validationType: ValidationType.objectID,
+                          validationType: ValidationType.objectID,
                           width: 100,
                           hintText: "Pairing ID",
                           labelText: 'Pairing ID',
