@@ -184,6 +184,8 @@ class HomePageViewModel with ChangeNotifier {
       return true;
     }
     catch(e){
+      print(e.toString());
+
       return false;
     }
 
