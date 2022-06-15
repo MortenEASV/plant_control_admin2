@@ -2,34 +2,32 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:dartssh2/dartssh2.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:dartssh2/dartssh2.dart';
 import 'package:ini/ini.dart';
+import 'package:http/http.dart' as http;
 import 'package:plant_control_admin/enumerators.dart';
 
 class HomePageViewModel with ChangeNotifier {
-  //Singleton
+  //Ensure class is used as a singleton
   static final HomePageViewModel instance = HomePageViewModel._();
-
   HomePageViewModel._() {
     init();
   }
 
+  //Initialize class variables
   String sshHost = "raspberrypi.local";
   late SSHClient client;
   FileImage qrCenterImg = FileImage(File("assets/chip.png"));
   FileImage qrPlaceholderImg = FileImage(File("assets/placeholder.webp"));
-
-  //var img = NetworkImage("https://cdn-icons-png.flaticon.com/512/964/964748.png");
   bool connected = false;
   bool configRead = false;
   Config defaultConfig = Config();
   Config config = Config();
 
-  init() {
+
+  init(){
     initConfig();
     connectSSH();
 
@@ -39,10 +37,11 @@ class HomePageViewModel with ChangeNotifier {
     });
   }
 
+  //Requests an ID from the Rest API and saves it to the config file
   Future<bool> registerOnClick() async {
-    if (!connected) return false; //Guard clause
+    if (!connected) return false;   //Guard clause
 
-    /*  //Not enabled
+    /*  //Not enabled to avoid database troubles
     //If logger already has an ID, we make a delete request for the old one
     if (config.get('Logging', 'LoggerId')!.isNotEmpty) {
       var res = await request(config.get('Logging', 'LoggerId')!, HttpRequestType.delete);
@@ -52,8 +51,7 @@ class HomePageViewModel with ChangeNotifier {
      */
 
     //Make post request
-    var response = await request(
-        "Registered from plant_control_admin", HttpRequestType.post);
+    var response = await request("Registered from plant_control_admin", HttpRequestType.post);
     if (response.statusCode != 201) return false; //Guard clause
 
     //Decode Json to map
@@ -69,6 +67,7 @@ class HomePageViewModel with ChangeNotifier {
     return true;
   }
 
+  //Http request that takes a parameter and a type of request
   Future<http.Response> request(String param, HttpRequestType type) async {
     var url = Uri.parse('http://${config.get("Logging", 'RestUrl')!}/loggers');
     switch (type) {
@@ -90,9 +89,9 @@ class HomePageViewModel with ChangeNotifier {
     }
   }
 
+  //Establish a connection to the logger via SSH
   connectSSH() async {
     try {
-      //Connect to raspberry via SSH
       client = SSHClient(
           await SSHSocket.connect('raspberrypi.local', 22,
               timeout: const Duration(seconds: 5)),
@@ -107,20 +106,20 @@ class HomePageViewModel with ChangeNotifier {
         notifyListeners();
       });
 
+      //If successful, we set the connected variable, and read the config file next
       connected = true;
       readConfigFile();
     } catch (_) {}
   }
 
+  //Read the config file on the raspberry through the sftp protocol
   readConfigFile() async {
     print('trying to read config');
     if (configRead) return; //Guard clause
 
-    //Read the config file on the raspberry through the sftp protocol
     final sftp = await client.sftp();
     sftp.close();
-    final file =
-        await sftp.open('/home/pi/denis/plant-control-logger/config.ini');
+    final file = await sftp.open('/home/pi/denis/plant-control-logger/config.ini');
     final content = await file.readBytes();
 
     config = Config.fromString(latin1.decode(content));
@@ -130,14 +129,17 @@ class HomePageViewModel with ChangeNotifier {
     print('notifying');
   }
 
-  stopProgram() async {
+  //Stop the logger program so we can write a config file safely
+  stopProgram() async{
     var res = client.run('pkill -f -2 -e main.py');
     print(res);
   }
 
-  startProgram() async {
-    await client.run('(cd ~/denis/plant-control-logger; python3 main.py)');
+  //Start the logger program
+  startProgram() async{
+   await client.run('(cd ~/denis/plant-control-logger; python3 main.py)');
   }
+
 
   //Initialize a default config for when a raspberry is not connected, or when a config file could not be found
   initConfig() {
@@ -167,9 +169,7 @@ class HomePageViewModel with ChangeNotifier {
       await stopProgram();
       final sftp = await client.sftp();
       sftp.close();
-      final file = await sftp.open(
-          '/home/pi/denis/plant-control-logger/config.ini',
-          mode: SftpFileOpenMode.write);
+      final file = await sftp.open('/home/pi/denis/plant-control-logger/config.ini', mode: SftpFileOpenMode.write);
       await file.writeBytes(utf8.encode(config.toString()) as Uint8List);
       configRead = false;
       readConfigFile();

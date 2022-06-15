@@ -27,6 +27,9 @@ class _BarcodeWidgetState extends State<BarcodeWidget> {
         child: Center(
             child: widget.content.isNotEmpty
                 ? //Conditional widget
+
+
+                //True
                 PrettyQr(
                     image: widget.qrCenterImg,
                     typeNumber: 6,
@@ -35,6 +38,8 @@ class _BarcodeWidgetState extends State<BarcodeWidget> {
                     errorCorrectLevel: QrErrorCorrectLevel.H,
                     roundEdges: false,
                   )
+
+                //False
                 : Column(
                     children: [
                       Image(

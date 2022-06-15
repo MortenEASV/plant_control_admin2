@@ -6,6 +6,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
 
+  //Set desktop app window size and settings
   WindowOptions windowOptions = const WindowOptions(
     size: Size(917, 675),
     minimumSize: Size(917, 675),

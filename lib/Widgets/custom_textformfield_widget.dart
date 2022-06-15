@@ -76,6 +76,10 @@ class _CustomTextFormFieldWidgetState extends State<CustomTextFormFieldWidget> {
               },
               autovalidateMode: AutovalidateMode.onUserInteraction,
               controller: widget.textEditingController..text = widget.text,
+              enabled: widget.enabled,
+              readOnly: widget.readonly,
+
+              //Visuals
               decoration: InputDecoration(
                 labelText: widget.labelText,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -86,8 +90,7 @@ class _CustomTextFormFieldWidgetState extends State<CustomTextFormFieldWidget> {
                   borderRadius: BorderRadius.zero,
                 ),
               ),
-              enabled: widget.enabled,
-              readOnly: widget.readonly,
+
             ),
           ),
         ],

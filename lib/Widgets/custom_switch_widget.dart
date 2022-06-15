@@ -26,8 +26,11 @@ class CustomSwitchWidget extends StatefulWidget {
 }
 
 class CustomSwitchWidgetState extends State<CustomSwitchWidget> {
+
   @override
   Widget build(BuildContext context) {
+
+    //Initialize switch
     if (!widget.initialized) {
       widget.isSelected = List<bool>.of({
         widget.config.get("Logging", "Active")!.toLowerCase() == "true",
