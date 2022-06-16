@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plant_control_admin/Widgets/custom_text_button.dart';
+import 'package:plant_control_admin/Widgets/custom_text_button_widget.dart';
 
 class AlertWidget extends StatelessWidget {
   const AlertWidget(

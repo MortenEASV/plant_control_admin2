@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ini/ini.dart';
 import 'package:plant_control_admin/Widgets/custom_switch_widget.dart';
-import 'package:plant_control_admin/Widgets/custom_text_button.dart';
+import 'package:plant_control_admin/Widgets/custom_text_button_widget.dart';
 import 'package:plant_control_admin/Widgets/custom_textformfield_widget.dart';
 import 'package:plant_control_admin/enumerators.dart';
 
