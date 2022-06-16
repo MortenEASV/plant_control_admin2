@@ -58,9 +58,17 @@ class _CustomTextFormFieldWidgetState extends State<CustomTextFormFieldWidget> {
                     }
                     break;
                   case ValidationType.ip:
-                    if (!RegExp(r'^\d+(\.\d+)*:\d{1,6}$').hasMatch(value) ||
+                    if (!RegExp(r"^"
+                        + "(((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}" // Domain name
+                        + "|"
+                        + "localhost" // Localhost
+                        + "|"
+                        + "(([0-9]{1,3}\\.){3})[0-9]{1,3})" // Ip
+                        + ":"
+                        + "[0-9]{1,5}\$"  // Port
+                          ).hasMatch(value) ||
                         value.isEmpty) {
-                      return 'Valid format: 0.0.0.0:0000';
+                      return 'Not an IP or Hostname';
                     }
                     break;
                   case ValidationType.objectID:
