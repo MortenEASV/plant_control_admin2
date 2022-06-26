@@ -33,6 +33,7 @@ class HomePageViewModel with ChangeNotifier {
 
     //Initialize network state listener
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      print('yo');
       connectSSH();
     });
   }
@@ -92,6 +93,8 @@ class HomePageViewModel with ChangeNotifier {
   //Establish a connection to the logger via SSH
   connectSSH() async {
     try {
+      print("trying connection");
+      sleep(Duration(seconds: 2));
       client = SSHClient(
           await SSHSocket.connect('raspberrypi.local', 22,
               timeout: const Duration(seconds: 5)),
@@ -100,6 +103,7 @@ class HomePageViewModel with ChangeNotifier {
 
       //Subscribe for the event where the connection closes, and handle it
       client.done.then((value) {
+        print('yoooo');
         connected = false;
         configRead = false;
         config = defaultConfig;
@@ -109,7 +113,7 @@ class HomePageViewModel with ChangeNotifier {
       //If successful, we set the connected variable, and read the config file next
       connected = true;
       readConfigFile();
-    } catch (_) {}
+    } catch (e) {print("nope" + e.toString());}
   }
 
   //Read the config file on the raspberry through the sftp protocol
@@ -131,13 +135,13 @@ class HomePageViewModel with ChangeNotifier {
 
   //Stop the logger program so we can write a config file safely
   stopProgram() async{
-    var res = client.run('pkill -f -2 -e main.py');
+    var res = client.run('pkill -f -2 -e python3');
     print(res);
   }
 
   //Start the logger program
   startProgram() async{
-   await client.run('(cd ~/denis/plant-control-logger; python3 main.py)');
+   await client.run('(cd ~/denis/plant-control-logger; python3 .)');
   }
 
 
